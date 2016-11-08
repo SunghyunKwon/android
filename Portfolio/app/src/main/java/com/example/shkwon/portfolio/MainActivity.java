@@ -45,6 +45,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shkwon.multidex.portfolio.MapActivity;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -124,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(intent);
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -645,7 +646,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class SectionsFragment2 extends Fragment implements LocationListener {
+    public static class SectionsFragment2 extends Fragment {
 
         private GoogleMap googleMap;
         private LocationManager locationManager;
@@ -666,7 +667,7 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-
+/*
             locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
 
@@ -690,113 +691,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             setMyLocation();
-
+*/
             return rootView;
-        }
-
-        private LatLng myLocation;
-        double[] myGps;
-
-        private void setMyLocation(){
-            googleMap.setOnMyLocationChangeListener(myLocationChangeListener);
-
-        }
-        Marker mMarker;
-        private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-            @Override
-            public void onMyLocationChange(Location location) {
-                Log.d("KTH","location.getLatitude(), location.getLongitude() -> " + location.getLatitude() +","+ location.getLongitude());
-                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                mMarker = googleMap.addMarker(new MarkerOptions().position(loc));
-                if(googleMap != null){
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-                }
-            }
-        };
-
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {//위치설정 엑티비티 종료 후
-            super.onActivityResult(requestCode, resultCode, data);
-            switch (requestCode) {
-                case 0:
-                    locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                    Criteria criteria = new Criteria();
-                    provider = locationManager.getBestProvider(criteria, true);
-                    if(provider==null){//사용자가 위치설정동의 안했을때 종료
-                        getActivity().finish();
-                    }else{//사용자가 위치설정 동의 했을때
-                        locationManager.requestLocationUpdates(provider, 1L, 2F, SectionsFragment2.this.myLocationChangeListener);
-                        Log.d("KTH","117 locationMaanger done");
-                        setUpMapIfNeeded();
-                    }
-                    break;
-            }
-        }
-
-        @Override
-        public void onBackPressed() {
-            this.finish();
-        }
-
-        @Override
-        protected void onResume() {
-            super.onResume();
-            setUpMapIfNeeded();
-
-        }
-
-        @Override
-        protected void onPause() {
-            super.onPause();
-            locationManager.removeUpdates(this);
-        }
-
-        private void setUpMapIfNeeded() {
-            if (googleMap == null) {
-                googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView)).getMap();
-                if (googleMap != null) {
-                    setUpMap();
-                }
-            }
-        }
-
-        private void setUpMap() {
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getMyLocation();
-
-        }
-
-        boolean locationTag=true;
-
-        @Override
-        public void onLocationChanged(Location location) {
-            if(locationTag){//한번만 위치를 가져오기 위해서 tag를 주었습니다
-                Log.d("myLog"  , "onLocationChanged: !!"  + "onLocationChanged!!");
-                double lat =  location.getLatitude();
-                double lng = location.getLongitude();
-
-                Toast.makeText(SectionsFragment2.this, "위도  : " + lat +  " 경도: "  + lng ,  Toast.LENGTH_SHORT).show();
-                locationTag=false;
-            }
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            // TODO Auto-generated method stub
-
         }
     }
 
